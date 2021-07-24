@@ -1,10 +1,9 @@
-package com.hk.mvvmversion
+package com.hk.mvvmversion.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.hk.mvvmversion.base.Execute
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -25,10 +24,29 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun openFragment(layout: Int, fragment: Fragment, type: FragmentTransactionWaysEnum) {
         when(type) {
-            FragmentTransactionWaysEnum.AddWithBackStack -> FragmentTransactionWays.AddWithBackStack(layout, fragment, fragmentManager)
-            FragmentTransactionWaysEnum.AddWithOutBackStack -> FragmentTransactionWays.AddWithOutBackStack(layout, fragment, fragmentManager)
-            FragmentTransactionWaysEnum.ReplaceWithBackStack -> FragmentTransactionWays.ReplaceWithBackStack(layout, fragment, fragmentManager)
-            FragmentTransactionWaysEnum.ReplaceWithoutBackStack -> FragmentTransactionWays.ReplaceWithOutBackStack(layout, fragment, fragmentManager)
+            FragmentTransactionWaysEnum.AddWithBackStack -> FragmentTransactionWays.AddWithBackStack(
+                layout,
+                fragment,
+                fragmentManager
+            ).run()
+
+            FragmentTransactionWaysEnum.AddWithOutBackStack -> FragmentTransactionWays.AddWithOutBackStack(
+                layout,
+                fragment,
+                fragmentManager
+            ).run()
+
+            FragmentTransactionWaysEnum.ReplaceWithBackStack -> FragmentTransactionWays.ReplaceWithBackStack(
+                layout,
+                fragment,
+                fragmentManager
+            ).run()
+
+            FragmentTransactionWaysEnum.ReplaceWithoutBackStack -> FragmentTransactionWays.ReplaceWithOutBackStack(
+                layout,
+                fragment,
+                fragmentManager
+            ).run()
         }
     }
 
@@ -66,11 +84,14 @@ abstract class BaseActivity : AppCompatActivity() {
             val fragmentManager: FragmentManager
         ) : FragmentTransactionWays() {
             override fun run() {
-                    fragmentManager.beginTransaction().apply {
-                        replace(layout, fragment)
-                        addToBackStack(fragment.tag)
-                        commit()
-                    }
+
+                fragmentManager.beginTransaction().apply {
+                    replace(layout, fragment)
+                    addToBackStack(fragment.tag)
+                    commit()
+                }
+
+
             }
         }
 
@@ -85,6 +106,14 @@ abstract class BaseActivity : AppCompatActivity() {
                         commit()
                     }
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if(fragmentManager.backStackEntryCount == 0) {
+            super.onBackPressed()
+        } else {
+            popBackStack()
         }
     }
 

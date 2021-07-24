@@ -1,10 +1,9 @@
-package com.hk.mvvmversion.ui
+package com.hk.mvvmversion.ui.activities
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.hk.mvvmversion.BaseActivity
+import com.hk.mvvmversion.base.BaseActivity
 import com.hk.mvvmversion.R
+import com.hk.mvvmversion.ui.fragments.ListFragment
 import com.hk.mvvmversion.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -12,6 +11,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
+    val TAG = MainActivity::class.java.simpleName
     @Inject
     lateinit var context: Context
     @Inject
@@ -20,4 +20,10 @@ class MainActivity : BaseActivity() {
         return R.layout.activity_main
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        logger.debug(TAG, "OnStart()")
+        openFragment(R.id.container, ListFragment.newInstance(), FragmentTransactionWaysEnum.ReplaceWithoutBackStack)
+    }
 }
