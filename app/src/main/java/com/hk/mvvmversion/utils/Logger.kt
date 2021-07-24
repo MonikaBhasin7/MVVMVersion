@@ -4,10 +4,14 @@ import com.hk.mvvmversion.BuildConfig
 import timber.log.Timber
 import javax.inject.Inject
 
-class Logger @Inject constructor(){
+class Logger @Inject constructor() {
 
     fun debug(TAG: String, message: String) {
         println("here")
-        Timber.d(TAG, message)
+        Timber.tag(TAG).d(message)
+    }
+
+    fun error(TAG:String?,errorText:String?){
+        Timber.tag(TAG).e(errorText)
     }
 }
