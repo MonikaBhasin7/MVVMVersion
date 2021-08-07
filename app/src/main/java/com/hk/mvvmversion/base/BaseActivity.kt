@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.hk.mvvmversion.utils.OpenFragment
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -20,6 +21,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun popBackStack() {
         fragmentManager.popBackStack()
+    }
+
+    fun openFragment(lambda : OpenFragment.() -> (Unit)) {
+        val openFragment = OpenFragment()
+        openFragment.lambda()
+        openFragment(openFragment.container, openFragment.fragment, openFragment.way)
     }
 
     fun openFragment(layout: Int, fragment: Fragment, type: FragmentTransactionWaysEnum) {
