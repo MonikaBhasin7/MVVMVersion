@@ -2,21 +2,19 @@ package com.hk.mvvmversion.network
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
-import javax.inject.Singleton
-import retrofit2.*
 import org.json.JSONObject
+import retrofit2.*
 import javax.inject.Inject
 
 class ApiCallback<R>(
     val responseType: Class<R>,
     val successCallback: (R) -> (Unit),
     val failureCallback: (String) -> (Unit)
-) : Callback<JsonObject> {
+) : Callback<JSONObject> {
 
     @Inject
     val gson: Gson? = null
-    override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+    override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
         if(response.isSuccessful) {
             if(response.body() != null) {
                 gson?.fromJson(
@@ -31,7 +29,7 @@ class ApiCallback<R>(
         }
     }
 
-    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+    override fun onFailure(call: Call<JSONObject>, t: Throwable) {
         failureCallback(t.localizedMessage)
     }
 }

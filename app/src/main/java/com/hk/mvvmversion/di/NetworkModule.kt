@@ -46,29 +46,3 @@ object NetworkModule {
         return retrofit.create(ApiService::class.java)
     }
 }
-
-/*
-* @Provides
-    @Singleton
-    fun provideHttpClientBuilder(): OkHttpClient = OkHttpClient.Builder()
-        .readTimeout(60, TimeUnit.SECONDS)
-        .connectTimeout(60, TimeUnit.SECONDS)
-        .build()
-
-    @Provides
-    @Singleton
-    fun provideGsonBuilder(): Gson = GsonBuilder()
-        .excludeFieldsWithoutExposeAnnotation()
-        .create()
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.TMDB_BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
-
-    @Provides
-    @Singleton
-    fun provideNetworkService(retrofit: Retrofit): TmdbAPI = retrofit.create(TmdbAPI::class.java)*/
