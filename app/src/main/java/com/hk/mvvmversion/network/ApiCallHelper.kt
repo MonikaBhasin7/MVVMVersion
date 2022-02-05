@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+
 class ApiCallHelper {
 
     @Inject
@@ -14,6 +14,28 @@ class ApiCallHelper {
 
     @Inject
     val gson: Gson? = null
+
+    fun <P, R> apiCall(lambda: ApiCall<P, R>.() -> (Unit)) {
+        val apiCallObj = ApiCall<P, R>()
+        apiCallObj.lambda()
+        apiCall(
+            apiCallObj.networkRequestType!!,
+            apiCallObj.responseType!!,
+            apiCallObj.url!!,
+            apiCallObj.payload,
+            apiCallObj.success!!,
+            apiCallObj.failure!!
+        )
+    }
+
+    class ApiCall<P, R>() {
+        var networkRequestType: NETWORK_REQUEST_TYPE? = null
+        var responseType: Class<R>? = null
+        var url: String? = null
+        var payload: P? = null
+        var success: ((R) -> (Unit))? = null
+        var failure: ((String) -> (Unit))? = null
+    }
 
     fun <P, R> apiCall(
         networkRequestType: NETWORK_REQUEST_TYPE,
@@ -25,7 +47,7 @@ class ApiCallHelper {
     ) {
         when (networkRequestType) {
             NETWORK_REQUEST_TYPE.GET -> {
-                getApiCall(url, responseType, payload, successCallback, failureCallback)
+                getApiCall(url,responseType , payload, successCallback, failureCallback)
             }
             NETWORK_REQUEST_TYPE.POST -> {
 

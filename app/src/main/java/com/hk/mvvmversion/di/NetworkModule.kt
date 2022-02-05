@@ -2,6 +2,7 @@ package com.hk.mvvmversion.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.hk.mvvmversion.network.ApiCallHelper
 import com.hk.mvvmversion.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -31,18 +32,23 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun getApiService(okHttpClient: OkHttpClient, gson: Gson): ApiService {
+    fun getRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
-                .baseUrl("")
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-                .create(ApiService::class.java)
+            .baseUrl("")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
     }
 
     @Provides
     @Singleton
     fun getApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun getApiCallHelperInstance() : ApiCallHelper {
+        return ApiCallHelper()
     }
 }
