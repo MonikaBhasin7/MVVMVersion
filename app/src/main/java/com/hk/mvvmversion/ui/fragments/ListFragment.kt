@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.hk.mvvmversion.R
@@ -20,8 +21,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
     val TAG = ListFragment::class.java.simpleName
 
-    @Inject lateinit var logger : Logger
-    lateinit var viewModel: MainViewModel
+    var viewModel: MainViewModel? = null
 
     companion object {
         @JvmStatic
@@ -31,12 +31,8 @@ class ListFragment : Fragment(R.layout.fragment_list) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        logger.debug(TAG, "OnStart()")
-
-
+        view?.findViewById<Button>(R.id.button)?.setOnClickListener {
+            viewModel?.getData()
+        }
     }
 }

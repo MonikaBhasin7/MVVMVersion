@@ -19,9 +19,9 @@ class MainViewModel @Inject constructor(mainRepo: MainRepo): ViewModel() {
     fun getData() {
         apiCallHelper.apiCall<Person, Person> {
             networkRequestType = NETWORK_REQUEST_TYPE.GET
-            responseType = Person::class.java
-            url = ""
-            payload = Person()
+            responseType = null
+            url = "http://0.0.0.0:8082/HareKrsna"
+            payload = null
             success = {
             }
             failure = {

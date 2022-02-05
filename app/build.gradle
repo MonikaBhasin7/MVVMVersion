@@ -55,12 +55,18 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:$versions.archCompomentVersion"
 
     // hilt
+//    implementation "com.google.dagger:hilt-android:$versions.hiltCoreVersion"
+//    androidTestImplementation "com.google.dagger:hilt-android-testing:$versions.hiltCoreVersion"
+//    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
+//    kaptAndroidTest "com.google.dagger:hilt-compiler:$versions.hiltCoreVersion"
+
+   // def hiltVersion = "2.28.1-alpha"
     implementation "com.google.dagger:hilt-android:$versions.hiltCoreVersion"
-    kapt "com.google.dagger:hilt-compiler:$versions.hiltCoreVersion"
-    kapt "androidx.hilt:hilt-compiler:$versions.hiltVersion"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$versions.hiltCoreVersion"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
-    kaptAndroidTest "com.google.dagger:hilt-compiler:$versions.hiltCoreVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$versions.hiltCoreVersion"
+
+   // def hiltExtVersion = "1.0.0-alpha02"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$versions.hiltExtVersion"
+    kapt "androidx.hilt:hilt-compiler:$versions.hiltExtVersion"
 
     // network
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"
