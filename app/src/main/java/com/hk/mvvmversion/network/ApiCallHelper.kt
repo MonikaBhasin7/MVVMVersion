@@ -64,7 +64,7 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
                 postApiCall(url, responseType, payload, successCallback, failureCallback)
             }
             NETWORK_REQUEST_TYPE.PUT -> {
-
+                putApiCall(url, responseType, payload, successCallback, failureCallback)
             }
             NETWORK_REQUEST_TYPE.DELETE -> {
 
@@ -76,6 +76,17 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
 
             }
         }
+    }
+
+    private fun <R, P> putApiCall(
+        url: String,
+        responseType: Class<R>,
+        payload: P?,
+        successCallback: (R) -> Unit,
+        failureCallback: (String) -> Unit
+    ) {
+        apiService?.put(endPoint = url, payload = getMapFromPayload(payload))
+            ?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
     }
 
     private fun <R, P> postApiCall(
@@ -96,7 +107,7 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
         successCallback: (R) -> Unit,
         failureCallback: (String) -> Unit
     ) {
-        apiService?.get(url, getMapFromPayload(payload))
+        apiService?.get(endPoint = url, queryParams = getMapFromPayload(payload))
             ?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
     }
 
