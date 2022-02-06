@@ -41,7 +41,6 @@ object NetworkModule {
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .setPrettyPrinting()
         .serializeNulls()
-        //.registerTypeAdapterFactory(CustomizedObjectTypeAdapter.FACTORY)
         .create()
 
 
