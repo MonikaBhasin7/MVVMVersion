@@ -7,14 +7,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-class ApiCallHelper {
+class ApiCallHelper @Inject constructor(val apiService: ApiService?, val gson: Gson) {
 
-    @Inject
-    val apiService: ApiService? = null
-
-    @Inject
-    val gson: Gson? = null
-
+    val TAG = "ApiCallHelper"
     fun <P, R> apiCall(lambda: ApiCall<P, R>.() -> (Unit)) {
         val apiCallObj = ApiCall<P, R>()
         apiCallObj.lambda()
@@ -47,6 +42,7 @@ class ApiCallHelper {
     ) {
         when (networkRequestType) {
             NETWORK_REQUEST_TYPE.GET -> {
+                println("$TAG - apiCall NETWORK_REQUEST_TYPE.GET")
                 getApiCall(url,responseType , payload, successCallback, failureCallback)
             }
             NETWORK_REQUEST_TYPE.POST -> {
@@ -74,13 +70,20 @@ class ApiCallHelper {
         successCallback: (R) -> Unit,
         failureCallback: (String) -> Unit
     ) {
-        apiService?.get(url, getMapFromPayload(payload))?.enqueue(ApiCallback(responseType, successCallback, failureCallback))
+        println("$TAG - url - $url")
+        println("$TAG - payload - $payload")
+        val map = getMapFromPayload(payload)
+        println("$TAG - map - $map")
+        apiService?.get(url, map)?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
     }
 
-    private fun <P> getMapFromPayload(payload: P): Map<String, Any>? {
-        return gson?.fromJson(
+    private fun <P> getMapFromPayload(payload: P): Map<String, Any> {
+        println("$TAG - payload - $payload")
+        val payloadInJson = gson.toJson(payload)
+        println("$TAG - payloadInJson - $payloadInJson")
+        return gson.fromJson(
             gson.toJson(payload),
-            object : TypeToken<Map<String, Any>?>() {}.type
+            object : TypeToken<Map<String?, Any?>?>() {}.type
         )
     }
 }

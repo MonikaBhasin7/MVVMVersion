@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.hk.mvvmversion.R
+import com.hk.mvvmversion.databinding.FragmentListBinding
 import com.hk.mvvmversion.ui.activities.MainActivity
 import com.hk.mvvmversion.ui.viewModels.MainViewModel
 import com.hk.mvvmversion.utils.Logger
@@ -21,18 +22,27 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
     val TAG = ListFragment::class.java.simpleName
 
-    var viewModel: MainViewModel? = null
+    var binding : FragmentListBinding? = null
+
+    private val mainViewModel: MainViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentListBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding?.button?.setOnClickListener {
+            mainViewModel.getData()
+        }
+    }
 
     companion object {
         @JvmStatic
         fun newInstance() = ListFragment()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        view?.findViewById<Button>(R.id.button)?.setOnClickListener {
-            viewModel?.getData()
-        }
     }
 }
