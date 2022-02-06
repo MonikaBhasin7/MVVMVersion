@@ -12,16 +12,15 @@ class ApiCallback<R>(
     val successCallback: (R) -> (Unit),
     val failureCallback: (String) -> (Unit),
     val gson: Gson
-) : Callback<JSONObject> {
+) : Callback<JsonObject> {
 
     val TAG = "ApiCallback"
     lateinit var logger: Logger
-    override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
-        logger.debug(TAG, "onResponse")
-        println("$TAG - onResponse")
+    override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+        println("$TAG - onResponse - response - ${response.body()} call -- ${call.request().body} -- ${call.request().url}")
         if(response.isSuccessful) {
             if(response.body() != null) {
-                gson?.fromJson(
+                gson.fromJson(
                     response.body().toString(),
                     responseType
                 )?.let {
@@ -33,7 +32,7 @@ class ApiCallback<R>(
         }
     }
 
-    override fun onFailure(call: Call<JSONObject>, t: Throwable) {
+    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
         println("$TAG - onFailure - ${call.request().body} -- ${call.request().url} -- $t")
         failureCallback(t.localizedMessage)
     }

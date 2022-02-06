@@ -1,5 +1,10 @@
 package com.hk.mvvmversion.utils
 
+
+data class IdAndName (
+    val id: Int,
+    val name: String
+)
 data class WeatherApiResponse(
     val current: Current,
     val location: Location,

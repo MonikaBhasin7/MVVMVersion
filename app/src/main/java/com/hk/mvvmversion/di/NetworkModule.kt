@@ -48,7 +48,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun getRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+    fun getRetrofit( okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://krsna.com")
             .client(okHttpClient)

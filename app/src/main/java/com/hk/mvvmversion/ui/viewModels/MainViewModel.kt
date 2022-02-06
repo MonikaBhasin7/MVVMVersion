@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.hk.mvvmversion.data.MainRepo
 import com.hk.mvvmversion.network.ApiCallHelper
 import com.hk.mvvmversion.network.NETWORK_REQUEST_TYPE
+import com.hk.mvvmversion.utils.IdAndName
 import com.hk.mvvmversion.utils.WeatherApiPayload
 import com.hk.mvvmversion.utils.WeatherApiResponse
 import javax.inject.Inject
@@ -18,14 +19,16 @@ class MainViewModel @ViewModelInject constructor(mainRepo: MainRepo, var apiCall
 
     fun getData() {
         println("$TAG - getData")
-        apiCallHelper.apiCall<WeatherApiPayload, WeatherApiResponse> {
+        apiCallHelper.apiCall<IdAndName, IdAndName> {
             networkRequestType = NETWORK_REQUEST_TYPE.GET
-            responseType = WeatherApiResponse::class.java
-            url = "http://api.weatherstack.com/current"
-            payload = WeatherApiPayload(access_key = "bb7c4b45616fbe4b1c2f83c6ea9417b4", query = "New York")
+            responseType = IdAndName::class.java
+            url = "http://192.168.1.7:8081/HareKrsna"
+            payload = IdAndName(1, "Monika")
             success = {
+                println("$TAG - successCallback - $it")
             }
             failure = {
+                println("$TAG - failureCallback - $it")
             }
         }
     }

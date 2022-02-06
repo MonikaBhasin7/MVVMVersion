@@ -1,8 +1,8 @@
 package com.hk.mvvmversion.network
 
+import com.google.gson.JsonObject
 import com.squareup.moshi.Moshi
 import okhttp3.MultipartBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -12,34 +12,34 @@ interface ApiService {
     fun get(
         @Url endPoint: String,
         @QueryMap(encoded = true) queryParams: Map<String, @JvmSuppressWildcards Any>? = null
-    ): Call<JSONObject>
+    ): Call<JsonObject>
 
     @POST
     fun post(
         @Url endPoint: String,
         @Body payload: Map<String, @JvmSuppressWildcards Any>? = null,
         @QueryMap queryMap: Map<String, @JvmSuppressWildcards Any>? = null
-    ): Call<JSONObject>
+    ): Call<JsonObject>
 
     @PUT
     fun put(
         @Url endPoint: String,
         @Body payload: Map<String, @JvmSuppressWildcards Any>? = null
-    ): Call<JSONObject>
+    ): Call<JsonObject>
 
     @DELETE
-    fun delete(@Url endPoint: String): Call<JSONObject>
+    fun delete(@Url endPoint: String): Call<JsonObject>
 
     @PATCH
     fun patch(
         @Url endPoint: String,
         @Body payload: Map<String, @JvmSuppressWildcards Any>? = null
-    ): Call<JSONObject>
+    ): Call<JsonObject>
 
     @Multipart
     @POST
     fun multipart(
         @Url endPoint: String,
         @Part file: MultipartBody.Part?
-    ): Call<JSONObject>
+    ): Call<JsonObject>
 }
