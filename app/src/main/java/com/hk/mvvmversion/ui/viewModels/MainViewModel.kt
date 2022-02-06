@@ -13,10 +13,7 @@ import javax.inject.Inject
 
 class MainViewModel @ViewModelInject constructor(mainRepo: MainRepo, var apiCallHelper: ApiCallHelper): ViewModel() {
 
-
     val TAG = "MainViewModel"
-
-
     fun getData() {
         println("$TAG - getData")
         apiCallHelper.apiCall<IdAndName, IdAndName> {
@@ -32,6 +29,4 @@ class MainViewModel @ViewModelInject constructor(mainRepo: MainRepo, var apiCall
             }
         }
     }
-
-
 }

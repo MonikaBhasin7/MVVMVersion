@@ -61,7 +61,7 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
                 } ?: getApiCallWithoutPayload(url, responseType, successCallback, failureCallback)
             }
             NETWORK_REQUEST_TYPE.POST -> {
-
+                postApiCall(url, responseType, payload, successCallback, failureCallback)
             }
             NETWORK_REQUEST_TYPE.PUT -> {
 
@@ -78,6 +78,17 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
         }
     }
 
+    private fun <R, P> postApiCall(
+        url: String,
+        responseType: Class<R>,
+        payload: P?,
+        successCallback: (R) -> Unit,
+        failureCallback: (String) -> Unit
+    ) {
+        apiService?.post(endPoint = url, payload = getMapFromPayload(payload))
+            ?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
+    }
+
     private fun <P, R> getApiCall(
         url: String,
         responseType: Class<R>,
@@ -85,11 +96,8 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
         successCallback: (R) -> Unit,
         failureCallback: (String) -> Unit
     ) {
-        println("$TAG - url - $url")
-        println("$TAG - payload - $payload")
-        val map = getMapFromPayload(payload)
-        println("$TAG - map - $map")
-        apiService?.get(url, map)?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
+        apiService?.get(url, getMapFromPayload(payload))
+            ?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
     }
 
     private fun <R> getApiCallWithoutPayload(
