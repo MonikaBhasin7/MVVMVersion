@@ -7,7 +7,7 @@ import org.json.JSONObject
 import retrofit2.*
 import javax.inject.Inject
 
-class ApiCallback<R>(
+class ApiCallbackHandler<R>(
     val responseType: Class<R>,
     val successCallback: (R) -> (Unit),
     val failureCallback: (String) -> (Unit),

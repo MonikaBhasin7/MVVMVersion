@@ -4,7 +4,6 @@ import com.google.gson.Gson
 
 import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val gson: Gson) {
@@ -86,7 +85,7 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
         failureCallback: (String) -> Unit
     ) {
         apiService?.put(endPoint = url, payload = getMapFromPayload(payload))
-            ?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
+            ?.enqueue(ApiCallbackHandler(responseType, successCallback, failureCallback, gson))
     }
 
     private fun <R, P> postApiCall(
@@ -97,7 +96,7 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
         failureCallback: (String) -> Unit
     ) {
         apiService?.post(endPoint = url, payload = getMapFromPayload(payload))
-            ?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
+            ?.enqueue(ApiCallbackHandler(responseType, successCallback, failureCallback, gson))
     }
 
     private fun <P, R> getApiCall(
@@ -108,7 +107,7 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
         failureCallback: (String) -> Unit
     ) {
         apiService?.get(endPoint = url, queryParams = getMapFromPayload(payload))
-            ?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
+            ?.enqueue(ApiCallbackHandler(responseType, successCallback, failureCallback, gson))
     }
 
     private fun <R> getApiCallWithoutPayload(
@@ -118,7 +117,7 @@ class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val
         failureCallback: (String) -> Unit
     ) {
         println("$TAG - url - $url")
-        apiService?.get(url, hashMapOf())?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
+        apiService?.get(url, hashMapOf())?.enqueue(ApiCallbackHandler(responseType, successCallback, failureCallback, gson))
     }
 
     private fun <P> getMapFromPayload(payload: P): Map<String, Any> {
