@@ -7,23 +7,36 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-class ApiCallHelper @Inject constructor(val apiService: ApiService?, val gson: Gson) {
+class ApiCallHelper @Inject constructor(private val apiService: ApiService?, val gson: Gson) {
 
     val TAG = "ApiCallHelper"
+
     fun <P, R> apiCall(lambda: ApiCall<P, R>.() -> (Unit)) {
-        val apiCallObj = ApiCall<P, R>()
-        apiCallObj.lambda()
-        apiCall(
-            apiCallObj.networkRequestType!!,
-            apiCallObj.responseType!!,
-            apiCallObj.url!!,
-            apiCallObj.payload,
-            apiCallObj.success!!,
-            apiCallObj.failure!!
-        )
+        ApiCall<P, R>().apply {
+            lambda()
+            networkRequestType?.let { networkRequestType ->
+                responseType?.let { responseType ->
+                    url?.let { url ->
+                        success?.let { successCallback ->
+                            failure?.let { failureCallback ->
+                                apiCall(
+                                    networkRequestType,
+                                    responseType,
+                                    url,
+                                    payload,
+                                    successCallback,
+                                    failureCallback
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
-    class ApiCall<P, R>() {
+    class ApiCall<P, R> {
         var networkRequestType: NETWORK_REQUEST_TYPE? = null
         var responseType: Class<R>? = null
         var url: String? = null
@@ -32,18 +45,20 @@ class ApiCallHelper @Inject constructor(val apiService: ApiService?, val gson: G
         var failure: ((String) -> (Unit))? = null
     }
 
-    fun <P, R> apiCall(
+    private fun <P, R> apiCall(
         networkRequestType: NETWORK_REQUEST_TYPE,
         responseType: Class<R>,
         url: String,
-        payload: P,
+        payload: P?,
         successCallback: (R) -> (Unit),
         failureCallback: (String) -> (Unit)
     ) {
         when (networkRequestType) {
             NETWORK_REQUEST_TYPE.GET -> {
                 println("$TAG - apiCall NETWORK_REQUEST_TYPE.GET")
-                getApiCall(url,responseType , payload, successCallback, failureCallback)
+                payload?.let {
+                    getApiCall(url, responseType, payload, successCallback, failureCallback)
+                } ?: getApiCallWithoutPayload(url, responseType, successCallback, failureCallback)
             }
             NETWORK_REQUEST_TYPE.POST -> {
 
@@ -63,7 +78,7 @@ class ApiCallHelper @Inject constructor(val apiService: ApiService?, val gson: G
         }
     }
 
-    private fun<P, R> getApiCall(
+    private fun <P, R> getApiCall(
         url: String,
         responseType: Class<R>,
         payload: P,
@@ -77,6 +92,16 @@ class ApiCallHelper @Inject constructor(val apiService: ApiService?, val gson: G
         apiService?.get(url, map)?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
     }
 
+    private fun <R> getApiCallWithoutPayload(
+        url: String,
+        responseType: Class<R>,
+        successCallback: (R) -> Unit,
+        failureCallback: (String) -> Unit
+    ) {
+        println("$TAG - url - $url")
+        apiService?.get(url, hashMapOf())?.enqueue(ApiCallback(responseType, successCallback, failureCallback, gson))
+    }
+
     private fun <P> getMapFromPayload(payload: P): Map<String, Any> {
         println("$TAG - payload - $payload")
         val payloadInJson = gson.toJson(payload)
@@ -87,9 +112,6 @@ class ApiCallHelper @Inject constructor(val apiService: ApiService?, val gson: G
         )
     }
 }
-
-
-
 
 
 enum class NETWORK_REQUEST_TYPE {
